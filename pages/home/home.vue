@@ -154,8 +154,7 @@
         flex-wrap: wrap;
         justify-content: space-around;
       }
-
     }
-
   }
+  
 </style>
