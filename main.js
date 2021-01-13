@@ -19,11 +19,11 @@ $http.afterRequest = function () {
  }
 
 // 封装弹出信息框
-uni.$showMsg = function(title='数据加载失败',duration=1500) {
-  uni.showTabBar({
+uni.$showMsg = function (title = '数据加载失败！', duration = 1500) {
+  uni.showToast({
     title,
     duration,
-    icon:'none'
+    icon: 'none',
   })
 }
 
