@@ -1,6 +1,7 @@
 <template>
   <view>
-    <!-- 分类页面 -->
+    <my-search @click="gotoSearch" :radius="18"></my-search>
+    <!-- 分类内容区域 -->
     <view class="scroll-view-container">
       <!-- 左边一级分类滚动视图区域 -->
       <scroll-view scroll-y class="cate-left" :style="{height:wh+'px'}">
@@ -57,7 +58,7 @@
       const sysInfo = uni.getSystemInfoSync()
       // 根据当前页面的信息获取当前页面可操作区域的高度，这样获取的好处是可以动态的得到当前页面的可操作区域的高度
       //当前页面的可操作区域就是减去顶部区域，底部tabbar区域的高度所剩区域的高度
-      this.wh = sysInfo.windowHeight
+      this.wh = sysInfo.windowHeight - 50
       // 调用请求,获取数据
       this.getCateList()
     },
@@ -87,6 +88,12 @@
     getGoodsList(item) {
       uni.navigateTo({
         url:'/subpkg/goods-list/goods-list?cid=' + item.cat_id
+      })
+    },
+    // 点击搜索组件,跳转到搜索页面
+    gotoSearch() {
+      uni.navigateTo({
+        url:'/subpkg/search/search'
       })
     }
     }
@@ -119,7 +126,7 @@
             display: block;
             width: 2px;
             height: 30px;
-            background-color: #DD524D;
+            background-color: #D11200;
           }
         }
       }

@@ -81,8 +81,8 @@
 		},
 		data() {
 			return {
-				show: false,
-				showSync: false,
+				show: true,
+				showSync: true,
 				searchVal: ""
 			}
 		},
@@ -144,7 +144,7 @@
 		flex-direction: row;
 		position: relative;
 		padding: 16rpx;
-		background-color: #ffffff;
+		background-color: #c00000;
 	}
 
 	.uni-searchbar__box {
@@ -155,7 +155,7 @@
 		overflow: hidden;
 		position: relative;
 		flex: 1;
-		justify-content: center;
+		justify-content: left;
 		flex-direction: row;
 		align-items: center;
 		height: 36px;

@@ -1,5 +1,8 @@
 <template>
   <view>
+    <view class="search-box">
+      <my-search :radius="18" @click="gotoSearch"></my-search>
+    </view>
     <!-- 轮播图区域 -->
     <!-- indicator-dots 表示是否开启小圆点
      autoplay 表示是否开启自动轮播
@@ -39,7 +42,7 @@
           </navigator>
           <!-- 右边的图片 -->
           <view class="right-img-box">
-            <navigator  :url="item2.url" class="right-img-item" v-for="(item2,i) in item.product_list" :key="i" v-if="i !== 0">
+            <navigator :url="item2.url" class="right-img-item" v-for="(item2,i) in item.product_list" :key="i" v-if="i !== 0">
               <image :src="item2.image_src" :style="{width:item2.image_width +'rpx'}" mode="widthFix"></image>
             </navigator>
           </view>
@@ -108,16 +111,27 @@
         const data = res.message
         data.forEach(floor => {
           floor.product_list.forEach(item => {
-            item.url = '/subpkg/goods-list/goods-list?'+item.navigator_url.split('?')[1]
+            item.url = '/subpkg/goods-list/goods-list?' + item.navigator_url.split('?')[1]
           })
         })
         this.floorList = res.message
+      },
+      // 点击搜索组件,跳转到搜索页面
+      gotoSearch() {
+        uni.navigateTo({
+          url: '/subpkg/search/search'
+        })
       }
     }
   }
 </script>
 
 <style lang="scss">
+  .search-box{
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
   swiper {
     height: 330rpx;
 
@@ -149,6 +163,7 @@
     .floor-img-box {
       display: flex;
       padding-left: 10rpx;
+
       .right-img-box {
         display: flex;
         flex-wrap: wrap;
@@ -156,5 +171,4 @@
       }
     }
   }
-  
 </style>
