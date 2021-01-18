@@ -36,41 +36,60 @@
          click 左侧按钮的点击事件处理函数
          buttonClick 右侧按钮的点击事件处理函数
          -->
-        <uni-goods-nav :fill="true"  :options="options" :buttonGroup="buttonGroup"  @click="onClick" @buttonClick="buttonClick" />
+        <uni-goods-nav :fill="true" :options="options" :buttonGroup="buttonGroup" @click="onClick" @buttonClick="buttonClick" />
       </view>
     </view>
   </view>
- 
+
 </template>
 
 <script>
+  import {
+    mapState,
+    mapMutations,
+    mapGetters
+  } from 'vuex'
   export default {
+    computed: {
+      ...mapGetters('m_cart', ['total'])
+    },
+    watch: {
+      total: {
+        handler(newVal) {
+          const findResult = this.options.find(x => x.text === '购物车')
+          if (findResult) {
+            findResult.info = newVal
+          }
+        },
+        // immediate 属性用来声明此侦听器，是否在页面初次加载完毕后立即调用
+        immediate: true
+      }
+    },
     data() {
       return {
         // 商品详情数据
         goodsDetail: [],
-        options: [ {
-                    icon: 'shop',
-                    text: '店铺',
-                    info: 2,
-                    infoBackgroundColor:'#007aff',
-                    infoColor:"red"
-                }, {
-                    icon: 'cart',
-                    text: '购物车',
-                    info: 2
-                }],
-                buttonGroup: [{
-                  text: '加入购物车',
-                  backgroundColor: '#ff0000',
-                  color: '#fff'
-                },
-                {
-                  text: '立即购买',
-                  backgroundColor: '#ffa200',
-                  color: '#fff'
-                }
-                ]
+        options: [{
+          icon: 'shop',
+          text: '店铺',
+          infoBackgroundColor: '#007aff',
+          infoColor: "red"
+        }, {
+          icon: 'cart',
+          text: '购物车',
+          info: 0
+        }],
+        buttonGroup: [{
+            text: '加入购物车',
+            backgroundColor: '#ff0000',
+            color: '#fff'
+          },
+          {
+            text: '立即购买',
+            backgroundColor: '#ffa200',
+            color: '#fff'
+          }
+        ]
       };
     },
     onLoad(options) {
@@ -79,6 +98,7 @@
       this.getGoodsDetail(goodsId)
     },
     methods: {
+      ...mapMutations('m_cart', ['addToCart']),
       async getGoodsDetail(goods_id) {
         const {
           data: res
@@ -86,8 +106,8 @@
           goods_id: goods_id
         })
         if (res.meta.status !== 200) return uni.$showMsg()
-       // 使用字符串的 replace() 方法，为 img 标签添加行内的 style 样式，从而解决图片底部空白间隙的问题
-         res.message.goods_introduce = res.message.goods_introduce.replace(/<img /g, '<img style="display:block;" ')
+        // 使用字符串的 replace() 方法，为 img 标签添加行内的 style 样式，从而解决图片底部空白间隙的问题
+        res.message.goods_introduce = res.message.goods_introduce.replace(/<img /g, '<img style="display:block;" ')
         this.goodsDetail = res.message
         console.log(res);
       },
@@ -101,11 +121,24 @@
       // 点击购物车,跳转到购物车页面
       onClick(e) {
         // 如果点击的按钮的文本为购物车，则进行相对应的操作
-        if(e.content.text === '购物车') {
+        if (e.content.text === '购物车') {
           // 操作tabbar跳转
           uni.switchTab({
-            url:'/pages/cart/cart'
+            url: '/pages/cart/cart'
           })
+        }
+      },
+      buttonClick(e) {
+        if (e.content.text === '加入购物车') {
+          const goods = {
+            goods_id: this.goodsDetail.goods_id,
+            goods_name: this.goodsDetail.goods_name,
+            goods_price: this.goodsDetail.goods_price,
+            goods_count: 1,
+            goods_small_logo: this.goodsDetail.goods_small_logo,
+            goods_state: true
+          }
+          this.addToCart(goods)
         }
       }
     }
@@ -121,47 +154,52 @@
       height: 100%;
     }
   }
-.goods-detail{
-  padding-bottom: 50px;
-  .goods-info-box {
-    padding: 10px;
-    padding-right: 0;
-    .goods-price {
-  
-      font-size: 20px;
-      color: #C00000;
-    }
-  
-    .goods-info-body {
-      margin: 10px 0;
-      display: flex;
-     justify-content: space-between;
-      .goods-title {
-        border-right: 1px solid #eee;
-        padding-right: 10px;
-        font-size: 13px;
+
+  .goods-detail {
+    padding-bottom: 50px;
+
+    .goods-info-box {
+      padding: 10px;
+      padding-right: 0;
+
+      .goods-price {
+
+        font-size: 20px;
+        color: #C00000;
       }
-  
-      .goods-collect {
-        width: 120px;
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       font-size: 12px;
-       color: #999;
+
+      .goods-info-body {
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+
+        .goods-title {
+          border-right: 1px solid #eee;
+          padding-right: 10px;
+          font-size: 13px;
+        }
+
+        .goods-collect {
+          width: 120px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-size: 12px;
+          color: #999;
+        }
       }
-    }
-    .expressage {
-      font-size: 12px;
-      color: #999;
-    }
-    .goods-nav{
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
+
+      .expressage {
+        font-size: 12px;
+        color: #999;
+      }
+
+      .goods-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+      }
     }
   }
-}
- 
 </style>
