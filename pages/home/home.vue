@@ -13,7 +13,7 @@
     <swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
       <!-- 循环渲染轮播图 item 项 -->
       <swiper-item v-for="(item,index) in swiperList" :key="index">
-        <navigator class="swiper-item" :url="'/subpkg/goods_detail/goods_detail?godds_id='+ item.goods_id">
+        <navigator class="swiper-item" :url="'/subpkg/goods_detail/goods_detail?goods_id='+ item.goods_id">
           <!-- 动态绑定图片的 src 属性 -->
           <image :src="item.image_src"></image>
         </navigator>

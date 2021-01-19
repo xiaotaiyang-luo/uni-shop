@@ -29,34 +29,37 @@
 </template>
 
 <script>
+  import {
+    mapMutations,
+    mapGetters,
+    mapState
+  } from 'vuex'
   export default {
     data() {
       return {
-        address: JSON.parse(uni.getStorageSync('address') || '{}')
+
       };
     },
     computed: {
-      addstr() {
-        if (!this.address.provinceName) return
-        return this.address.provinceName + this.address.cityName + this.address.countyName + this.address.detailInfo
-      }
+      ...mapState('m_user', ['address']),
+      ...mapGetters('m_user', ['addstr']),
     },
     methods: {
+      ...mapMutations('m_user', ['updateAddress']),
       async chooseAddress() {
         const [err, succ] = await uni.chooseAddress().catch(err => err)
         // console.log(succ);
         if (succ && succ.errMsg === "chooseAddress:ok") {
-          this.address = succ
+          this.updateAddress(succ)
         }
         console.log(err);
-        if (err && (err.errMsg === 'chooseAddress:fail auth deny' || err.errMsg === 'chooseAddress:fail authorize no response')) {
+        if (err && (err.errMsg === 'chooseAddress:fail auth deny' || err.errMsg ===
+            'chooseAddress:fail authorize no response')) {
           this.reAuth() // 调用 this.reAuth() 方法，向用户重新发起授权申请
         }
-        this.saveAddress()
+
       },
-      saveAddress() {
-        uni.setStorageSync('address', JSON.stringify(this.address))
-      },
+
       async reAuth() {
         const [err, confirmResult] = await uni.showModal({
           content: '检测到您没打开地址权限，是否去设置打开？',

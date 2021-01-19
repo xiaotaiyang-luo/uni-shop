@@ -80,7 +80,7 @@
       },
       {
         "pagePath": "pages/my/my",
-        "text": "分类",
+        "text": "我的",
         "iconPath": "static/tab_icons/my.png",
         "selectedIconPath": "static/tab_icons/my-active.png"
       }

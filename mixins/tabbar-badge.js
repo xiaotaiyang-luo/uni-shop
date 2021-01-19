@@ -19,6 +19,12 @@ export default {
   },
   methods: {
     setBadge() {
+      // 当购物车内没有商品时,清空tabbar的数据
+      if(this.total === 0) {
+        return uni.removeTabBarBadge({
+          index: 2,
+        })
+      }
       // 调用 uni.setTabBarBadge() 方法，为购物车设置右上角的徽标
       uni.setTabBarBadge({
         index: 2,
